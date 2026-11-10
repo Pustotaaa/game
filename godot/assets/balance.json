@@ -1,0 +1,421 @@
+{
+  "species": {
+    "cat": {
+      "name": "Белая кошка",
+      "damage": 12,
+      "interval": 0.55,
+      "icon": "✦",
+      "skill": "Лунный всплеск",
+      "description": "Удар по области",
+      "skillDamage": 34,
+      "cooldown": 8
+    },
+    "wolf": {
+      "name": "Сумеречный волк",
+      "damage": 16,
+      "interval": 0.85,
+      "icon": "»",
+      "skill": "Теневой рывок",
+      "description": "Сильный удар по трём целям",
+      "skillDamage": 50,
+      "cooldown": 10
+    },
+    "bat": {
+      "name": "Ледяной крылан",
+      "damage": 9,
+      "interval": 0.4,
+      "icon": "❄",
+      "skill": "Ледяной крик",
+      "description": "Урон и заморозка на 3 сек.",
+      "skillDamage": 14,
+      "cooldown": 12
+    }
+  },
+  "rarities": {
+    "common": {
+      "name": "Обычный",
+      "egg": "Обычное",
+      "color": "#c4b7ce",
+      "mult": 1
+    },
+    "rare": {
+      "name": "Редкий",
+      "egg": "Редкое",
+      "color": "#7db9fa",
+      "mult": 1.35
+    },
+    "epic": {
+      "name": "Эпический",
+      "egg": "Эпическое",
+      "color": "#d28bff",
+      "mult": 1.8
+    },
+    "legendary": {
+      "name": "Легендарный",
+      "egg": "Легендарное",
+      "color": "#f2c174",
+      "mult": 2.5
+    }
+  },
+  "branches": [
+    {
+      "id": "squad",
+      "name": "Отряд",
+      "icon": "♧",
+      "nodes": [
+        {
+          "id": "slot2",
+          "name": "Второй спутник",
+          "effect": "2 места в отряде",
+          "cost": 45
+        },
+        {
+          "id": "slot3",
+          "name": "Третий спутник",
+          "effect": "3 места в отряде",
+          "cost": 150
+        },
+        {
+          "id": "slot4",
+          "name": "Четвёртый спутник",
+          "effect": "4 места в отряде",
+          "cost": 220
+        },
+        {
+          "id": "skillPower",
+          "name": "Лунная сила",
+          "effect": "Урон навыков +30%",
+          "cost": 80,
+          "prerequisite": null
+        },
+        {
+          "id": "cooldown",
+          "name": "Быстрый отклик",
+          "effect": "Перезарядка навыков −25%",
+          "cost": 90
+        },
+        {
+          "id": "armor",
+          "name": "Стальная шкура",
+          "effect": "Урон в ближнем бою −15%",
+          "cost": 70,
+          "prerequisite": "health"
+        },
+        {
+          "id": "attackSpeed",
+          "name": "Инстинкт охоты",
+          "effect": "Скорость атак +15%",
+          "cost": 95,
+          "prerequisite": "armor"
+        },
+        {
+          "id": "lifesteal",
+          "name": "Жажда жизни",
+          "effect": "Атаки восстанавливают 5% нанесённого урона",
+          "cost": 120,
+          "prerequisite": "attackSpeed"
+        },
+        {
+          "id": "blastResist",
+          "name": "Единая стая",
+          "effect": "Урон атак босса по области −20%",
+          "cost": 100,
+          "prerequisite": "skillPower"
+        }
+      ]
+    },
+    {
+      "id": "eggs",
+      "name": "Яйца",
+      "icon": "◈",
+      "nodes": [
+        {
+          "id": "rarity",
+          "name": "Счастливая звезда",
+          "effect": "Шанс редкого и выше: 55%",
+          "cost": 40
+        },
+        {
+          "id": "discount",
+          "name": "Бережливость",
+          "effect": "Цена яйца −20%",
+          "cost": 45
+        },
+        {
+          "id": "rarity2",
+          "name": "Созвездие удачи",
+          "effect": "Шанс эпического и легендарного: 32%",
+          "cost": 120,
+          "prerequisite": "rarity"
+        },
+        {
+          "id": "discount2",
+          "name": "Верный покупатель",
+          "effect": "Цена яйца: 20 кристаллов",
+          "cost": 85,
+          "prerequisite": "discount"
+        },
+        {
+          "id": "trained",
+          "name": "Первые шаги",
+          "effect": "Опыт в бою +10%",
+          "cost": 110,
+          "prerequisite": "rarity2"
+        }
+      ]
+    },
+    {
+      "id": "run",
+      "name": "Забег",
+      "icon": "◇",
+      "nodes": [
+        {
+          "id": "health",
+          "name": "Крепкое сердце",
+          "effect": "Здоровье питомцев +25%",
+          "cost": 25
+        },
+        {
+          "id": "damage",
+          "name": "Острые когти",
+          "effect": "Весь урон +20%",
+          "cost": 40
+        },
+        {
+          "id": "speed",
+          "name": "Лёгкий шаг",
+          "effect": "Скорость героя +15%",
+          "cost": 55
+        },
+        {
+          "id": "abyss",
+          "name": "Отсрочка тьмы",
+          "effect": "Бездна наступает на 5 сек. позже",
+          "cost": 65
+        },
+        {
+          "id": "magnet",
+          "name": "Зов кристаллов",
+          "effect": "Автосбор рядом с героем",
+          "cost": 50,
+          "prerequisite": null
+        },
+        {
+          "id": "bounty",
+          "name": "Трофеи бездны",
+          "effect": "За каждого врага +1 кристалл",
+          "cost": 75,
+          "prerequisite": "damage"
+        },
+        {
+          "id": "magnet2",
+          "name": "Притяжение",
+          "effect": "Радиус автосбора: 205",
+          "cost": 100,
+          "prerequisite": "magnet"
+        },
+        {
+          "id": "shield",
+          "name": "Защитный оберег",
+          "effect": "Живые питомцы начинают этаж со щитом 20% HP",
+          "cost": 95,
+          "prerequisite": "health"
+        }
+      ]
+    }
+  ],
+  "items": {
+    "fang": {
+      "name": "Коготь охотника",
+      "icon": "⚔",
+      "costs": [
+        60,
+        320,
+        950
+      ],
+      "gates": [
+        2,
+        4,
+        7
+      ],
+      "damage": [
+        0.3,
+        0.65,
+        1.1
+      ],
+      "hp": [
+        0,
+        0,
+        0
+      ],
+      "heal": [
+        0,
+        0,
+        0
+      ],
+      "resist": [
+        0,
+        0,
+        0
+      ]
+    },
+    "heart": {
+      "name": "Каменное сердце",
+      "icon": "♥",
+      "costs": [
+        55,
+        300,
+        900
+      ],
+      "gates": [
+        2,
+        4,
+        7
+      ],
+      "damage": [
+        0,
+        0,
+        0
+      ],
+      "hp": [
+        0.45,
+        0.95,
+        1.65
+      ],
+      "heal": [
+        0,
+        0,
+        0
+      ],
+      "resist": [
+        0,
+        0,
+        0
+      ]
+    },
+    "ember": {
+      "name": "Угольный амулет",
+      "icon": "✦",
+      "costs": [
+        75,
+        380,
+        1100
+      ],
+      "gates": [
+        3,
+        5,
+        8
+      ],
+      "damage": [
+        0.15,
+        0.35,
+        0.6
+      ],
+      "hp": [
+        0,
+        0,
+        0
+      ],
+      "heal": [
+        0.015,
+        0.03,
+        0.05
+      ],
+      "resist": [
+        0.15,
+        0.3,
+        0.5
+      ]
+    },
+    "ward": {
+      "name": "Печать стража",
+      "icon": "◇",
+      "costs": [
+        65,
+        350,
+        1050
+      ],
+      "gates": [
+        3,
+        5,
+        8
+      ],
+      "damage": [
+        0,
+        0,
+        0
+      ],
+      "hp": [
+        0.2,
+        0.45,
+        0.75
+      ],
+      "heal": [
+        0,
+        0,
+        0
+      ],
+      "resist": [
+        0.2,
+        0.35,
+        0.5
+      ]
+    }
+  },
+  "passives": {
+    "cat": {
+      "name": "Девять жизней",
+      "text": "Каждая пятая атака лечит кошку на 6% максимального HP."
+    },
+    "wolf": {
+      "name": "Вожак",
+      "text": "Принимает удары первым и снижает урон ближнего боя на 12%."
+    },
+    "bat": {
+      "name": "Ледяное эхо",
+      "text": "Каждая четвёртая атака замораживает цель на 0,7 сек. Босса — на 0,25 сек."
+    }
+  },
+  "floors": {
+    "2": {
+      "health": 45,
+      "guardHealth": 68,
+      "count": 3,
+      "bossHealth": 469,
+      "damage": 1.12,
+      "bossDps": 5.936,
+      "pulseDamage": 14,
+      "pulsePeriod": 6.5,
+      "summonPeriod": 11,
+      "abyssDelay": 16,
+      "abyssSpeed": 85
+    },
+    "3": {
+      "health": 71,
+      "guardHealth": 106,
+      "count": 3,
+      "bossHealth": 773,
+      "damage": 1.288,
+      "bossDps": 7.056,
+      "pulseDamage": 19,
+      "pulsePeriod": 6,
+      "summonPeriod": 10,
+      "abyssDelay": 15,
+      "abyssSpeed": 89
+    },
+    "4": {
+      "health": 104,
+      "guardHealth": 156,
+      "count": 4,
+      "bossHealth": 1435,
+      "damage": 1.4560000000000002,
+      "bossDps": 8.288000000000002,
+      "pulseDamage": 23,
+      "pulsePeriod": 5.5,
+      "summonPeriod": 9,
+      "abyssDelay": 14,
+      "abyssSpeed": 93
+    }
+  },
+  "runSeconds": 45
+}

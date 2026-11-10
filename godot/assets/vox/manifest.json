@@ -1,0 +1,217 @@
+{
+  "format": "MagicaVoxel VOX 150",
+  "authoring": "original procedural models; editable in MagicaVoxel",
+  "seed": 472,
+  "models": [
+    {
+      "file": "tent.vox",
+      "voxels": 6628,
+      "size": [
+        48,
+        36,
+        36
+      ],
+      "sha256": "2a9963bb2a63b5a816c4ed66dc1e3afcb522a2be320d59f17a1802ca2b1ff0b7"
+    },
+    {
+      "file": "workshop.vox",
+      "voxels": 41920,
+      "size": [
+        53,
+        42,
+        49
+      ],
+      "sha256": "1cf0bc52d1f350fbe5ae77831c0c402228bd1590dacefb9a92e799391a3beb0e"
+    },
+    {
+      "file": "pine.vox",
+      "voxels": 12961,
+      "size": [
+        31,
+        31,
+        49
+      ],
+      "sha256": "39ef0de1ea7b273d4737afed1a29b9d69bc0de05cfde572590c156d87a2d2f41"
+    },
+    {
+      "file": "tree.vox",
+      "voxels": 11908,
+      "size": [
+        47,
+        31,
+        43
+      ],
+      "sha256": "be11b0bdfb74fa7795f4e47b93e621da7e22a6d73abc447b14770145b69cc45e"
+    },
+    {
+      "file": "bridge.vox",
+      "voxels": 2066,
+      "size": [
+        38,
+        20,
+        11
+      ],
+      "sha256": "0b7af73d16f23c615b071d8d630ec3a957d3399584c7af5f4796039bca0df1bb"
+    },
+    {
+      "file": "eggs.vox",
+      "voxels": 2268,
+      "size": [
+        25,
+        15,
+        16
+      ],
+      "sha256": "ae51f66b062737b15908afba6804eb114dfb8949f17df4adafc9f3d4c7d5c1db"
+    },
+    {
+      "file": "hero.vox",
+      "voxels": 3658,
+      "size": [
+        22,
+        17,
+        42
+      ],
+      "sha256": "092827c23058ace2655c155ba3de5dfd89debffeb507a4ddb84b17ca0278b527"
+    },
+    {
+      "file": "cat.vox",
+      "voxels": 1510,
+      "size": [
+        12,
+        20,
+        19
+      ],
+      "sha256": "6aa39dcc69e03709a96a6498e364f1e8d46ec13c1bdc693d76b200ee92a94f34"
+    },
+    {
+      "file": "wolf.vox",
+      "voxels": 3260,
+      "size": [
+        11,
+        32,
+        24
+      ],
+      "sha256": "d0c67bf71fd43dc11779c42a6ce14d7aa6b6a4ca9e6f26a1a6085c164057d002"
+    },
+    {
+      "file": "bat.vox",
+      "voxels": 811,
+      "size": [
+        33,
+        6,
+        12
+      ],
+      "sha256": "cd869e2a5421123713fd8d512e6b4b94a790c4b9cc0be4e6aa6898784188500f"
+    },
+    {
+      "file": "shadow.vox",
+      "voxels": 4190,
+      "size": [
+        19,
+        13,
+        26
+      ],
+      "sha256": "54684fdf01a8cad4c069cd533561b687169e6ba29b88f7d5fc05dca211b49ca6"
+    },
+    {
+      "file": "guard.vox",
+      "voxels": 4826,
+      "size": [
+        21,
+        13,
+        26
+      ],
+      "sha256": "d7039c4e5bfd168243e18c9c7daad61d8c99325b40c482f2995a85f274b7304a"
+    },
+    {
+      "file": "boss2.vox",
+      "voxels": 4781,
+      "size": [
+        26,
+        15,
+        36
+      ],
+      "sha256": "2a52d6bc85de95d280c14c079a6353cacb808162226424b8c6bee01ce9901214"
+    },
+    {
+      "file": "boss3.vox",
+      "voxels": 4781,
+      "size": [
+        26,
+        15,
+        36
+      ],
+      "sha256": "2a52d6bc85de95d280c14c079a6353cacb808162226424b8c6bee01ce9901214"
+    },
+    {
+      "file": "boss4.vox",
+      "voxels": 5341,
+      "size": [
+        26,
+        15,
+        36
+      ],
+      "sha256": "6198832c535eaf2ece8f41671ce68fb0ec0352a477a86d1f18fde3e0312aedd6"
+    },
+    {
+      "file": "lantern.vox",
+      "voxels": 367,
+      "size": [
+        11,
+        6,
+        28
+      ],
+      "sha256": "34e7ca75bf915d8191512ec2d9352164c91f910568ef55b4021e2c3fcf36e3cc"
+    },
+    {
+      "file": "crate.vox",
+      "voxels": 1426,
+      "size": [
+        13,
+        13,
+        10
+      ],
+      "sha256": "ee80fb76b64313350ec201d0190c6f002576debbdaeacf3e649736b4983a0222"
+    },
+    {
+      "file": "bench.vox",
+      "voxels": 561,
+      "size": [
+        21,
+        7,
+        7
+      ],
+      "sha256": "0122d23358527c95068695494cd173b4874caf5a4266b4fdce87f6098c9414c5"
+    },
+    {
+      "file": "crystal.vox",
+      "voxels": 566,
+      "size": [
+        9,
+        9,
+        14
+      ],
+      "sha256": "b15cdad967051b95c9eeb9d713b72b3ee427653ae376701c1898fc5faa7eb7a1"
+    },
+    {
+      "file": "pillar.vox",
+      "voxels": 3442,
+      "size": [
+        13,
+        13,
+        34
+      ],
+      "sha256": "102a0bd0f55ed47e3ba35c24877c4ebdf1eef74e6ad72fd0b1ce7c4c72e04da8"
+    },
+    {
+      "file": "rubble.vox",
+      "voxels": 757,
+      "size": [
+        16,
+        9,
+        8
+      ],
+      "sha256": "e92fec43132f888a31042c48d7bca862b0e0372ee8a3476f2efb09057dbf6140"
+    }
+  ]
+}

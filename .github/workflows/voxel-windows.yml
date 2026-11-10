@@ -1,0 +1,49 @@
+name: Voxel Windows
+on:
+  push:
+    branches: [voxel-godot]
+    paths: ['godot/**', '.github/workflows/voxel-windows.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      GODOT_VERSION: 4.7.2
+      XDG_DATA_HOME: ${{ github.workspace }}/.build-data
+      XDG_CONFIG_HOME: ${{ github.workspace }}/.build-config
+      XDG_CACHE_HOME: ${{ github.workspace }}/.build-cache
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - name: Get official Godot and Windows export templates
+        run: |
+          mkdir -p .engine "$XDG_DATA_HOME/godot/export_templates/$GODOT_VERSION.stable"
+          release="https://github.com/godotengine/godot/releases/download/$GODOT_VERSION-stable"
+          curl --retry 3 -fL "$release/Godot_v$GODOT_VERSION-stable_linux.x86_64.zip" -o .engine/editor.zip
+          curl --retry 3 -fL "$release/Godot_v$GODOT_VERSION-stable_export_templates.tpz" -o .engine/templates.tpz
+          unzip -q .engine/editor.zip -d .engine
+          unzip -joq .engine/templates.tpz 'templates/windows_*x86_64*' -d "$XDG_DATA_HOME/godot/export_templates/$GODOT_VERSION.stable"
+          echo "GODOT_BIN=$GITHUB_WORKSPACE/.engine/Godot_v$GODOT_VERSION-stable_linux.x86_64" >> "$GITHUB_ENV"
+      - name: Verify original balance and VOX sources
+        run: |
+          node godot/tools/sync_balance.cjs
+          git diff --exit-code -- godot/assets/balance.json
+          python3 godot/tests/validate_assets.py
+          node --test tests/gameplay.test.cjs
+      - name: Import and smoke test all three 3D floors
+        run: |
+          "$GODOT_BIN" --headless --editor --path godot --import --quit
+          timeout 60 "$GODOT_BIN" --headless --path godot -- --smoke-test > smoke.log 2>&1
+          cat smoke.log
+          grep -q 'SMOKE PASS' smoke.log
+          if grep -qE 'SCRIPT ERROR|ERROR:|Assertion failed' smoke.log; then exit 1; fi
+      - name: Export Windows x64
+        run: bash godot/tools/build_windows.sh
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: AbyssVoxel-Windows-x64
+          path: godot/builds/AbyssVoxel-Windows-x64.zip
+          if-no-files-found: error
+          retention-days: 30
