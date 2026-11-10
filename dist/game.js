@@ -42,7 +42,7 @@ function beep(f = 440) {
     osc.connect(gain); gain.connect(audio.destination); osc.start(); osc.stop(audio.currentTime + .13);
   } catch {}
 }
-function campFrame() { const h = Math.min(H, 1100); return {x: W / 2, w: Math.min(W * .92, 1440), h, top: (H - h) * .45}; }
+function campFrame() { const h = Math.min(H*.73, 1100); return {x: W / 2, w: Math.min(W * .92, 1440), h, top: (H - h) * .39}; }
 function campPoints() {
   const f = campFrame(), y = v => f.top + f.h * v;
   return {tree: {x: f.x, y: y(.33)}, fire: {x: f.x, y: y(.61)}, tent: {x: f.x - f.w * .27, y: y(.46)}, forge: {x: f.x + f.w * .29, y: y(.44)}, portal: {x: f.x, y: y(.88)}};
@@ -449,7 +449,7 @@ function campFloor() {
 }
 function buildCampBase() {
   const layer=document.createElement('canvas');layer.width=Math.ceil(W);layer.height=Math.ceil(H);
-  const original=ctx;ctx=layer.getContext('2d');ctx.imageSmoothingEnabled=false;campFloor();ctx=original;return layer;
+  const original=ctx;ctx=layer.getContext('2d');ctx.imageSmoothingEnabled=false;beginCampScenery();campFloor();ctx=original;return layer;
 }
 function background() {
   if(state!=='camp'&&floor>=6){drawFireSky();return;}
@@ -470,6 +470,7 @@ function background() {
 function campScene() {
   if(!campBase)campBase=buildCampBase();
   ctx.drawImage(campBase,0,0,W,H);
+  drawCampLifeBehindActors();
   const s=campPoints(),x=s.fire.x,y=s.fire.y;
   if(TERRAIN_ART.ready)drawCampTerrainLighting();
   if(OBJECT_ART.ready){drawCampObjectLighting();drawCampObjectFX();}
@@ -486,6 +487,7 @@ function campScene() {
   hero(camper.x,camper.y+Math.sin(anim*3));
   squadMembers().forEach((member,i) => drawPet(member, pet.x + i * 36, pet.y + (i % 2) * 20 + Math.sin(anim*3+i), 1.2));
   drawCampObject('portal',()=>portalArt(s.portal.x,s.portal.y,anim));
+  drawCampPortalAura();
   drawCampHover();
 }
 function battleScene() {
