@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#100b20">
+  <meta name="description" content="Бездна 100: лагерь, белая кошка и десять этажей бездны.">
+  <title>Бездна 100</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main id="world" aria-label="Бездна 100">
+    <canvas id="game" aria-label="Игровое поле"></canvas>
+    <div id="hud">
+      <div id="party-health" class="party-health" role="group" aria-label="Здоровье отряда"></div>
+      <div class="place"><span id="location">Лагерь</span><span id="timer" hidden>00:45</span></div>
+      <div class="top-actions"><div class="currency"><span>◆</span><span id="coins">0</span></div><button class="icon-button" id="fullscreen" aria-label="На весь экран">⛶</button><button class="icon-button" id="bestiary" aria-label="Бестиарий">▤</button><button class="icon-button" id="settings" aria-label="Меню">⚙</button></div>
+    </div>
+    <div id="bossbar" hidden><span id="bossname"></span><progress id="bossprogress" max="100" value="100" aria-label="Здоровье босса"></progress></div>
+    <div id="camp-actions">
+      <button id="meta-tree" class="camp-hotspot" aria-label="Дерево бездны"></button>
+      <button id="pets" class="camp-hotspot" aria-label="Отряд"></button>
+      <button id="workshop" class="camp-hotspot" aria-label="Мастерская"></button>
+      <button id="egg-machine" class="camp-hotspot" aria-label="Автомат яиц"></button>
+      <button id="portal" class="camp-hotspot" aria-label="Портал в бездну"></button>
+    </div>
+    <div id="skills" hidden></div>
+    <div id="overlay" hidden><section id="dialog" class="dialog" role="dialog" aria-modal="true" aria-labelledby="dialog-title"></section></div>
+
+    <div id="fullscreen-status" class="sr-only" role="status"></div>
+  </main>
+  <script src="progression.js"></script>
+  <script src="balance.js"></script>
+  <script src="camp.js"></script>
+  <script src="firelands.js"></script>
+  <script src="systems.js"></script>
+  <script src="workshop.js"></script>
+  <script src="object-art.js"></script>
+  <script src="terrain-art.js"></script>
+  <script src="actor-art.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
