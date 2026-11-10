@@ -267,6 +267,7 @@ canvas.addEventListener('pointerdown', ev => {
   if(clickEnemy(ev))return;
   collect(ev);
   if (state !== 'camp' || panel) return;
+  if(typeof forestPointer==='function'){forestPointer(ev);return;}
   const {x, y} = pointerPosition(ev), s = campPoints(), target = getCampTarget(x,y);
   if (target) { activateCampObject(target.id); return; }
   if (pointInPolygon(x, y, campOutline()) && y > s.tree.y + 25 && y < s.portal.y - 85) { camper.tx = x; camper.ty = y - 12; }

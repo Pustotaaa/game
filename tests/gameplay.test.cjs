@@ -11,7 +11,7 @@ function boot(){
  vm.runInContext(mockSource,context);
  const html=readFileSync(join(root,'index.html'),'utf8');
  for(const match of html.matchAll(/\bid="([^"]+)"/g))vm.runInContext('mock.elements.set('+JSON.stringify(match[1])+',element('+JSON.stringify(match[1])+'));',context);
- for(const name of ["progression.js","balance.js","camp.js","firelands.js","systems.js","workshop.js","object-art.js","terrain-art.js","actor-art.js","game.js","pixel-world.js","camp-life.js","camp-motion.js","pet-combat.js","abyss-nature.js","world-unified.js"]){
+ for(const name of ["progression.js","balance.js","camp.js","firelands.js","systems.js","workshop.js","object-art.js","terrain-art.js","actor-art.js","game.js","pixel-world.js","camp-life.js","camp-motion.js","pet-combat.js","abyss-nature.js","world-unified.js","forest-camp.js"]){
   new vm.Script(readFileSync(join(root,name),'utf8'),{filename:name}).runInContext(context);
   assert.equal(vm.runInContext('mock.raf.length',context),0,'Animation started before all scripts loaded: '+name);
  }
@@ -25,8 +25,8 @@ test('startup waits for all scripts; camp and late image callbacks render',()=>{
  assert.equal(game.run('mock.raf.length'),1);
  game.run('mock.raf.shift()(0)');
  assert.equal(game.run('mock.raf.length'),1);
- assert.equal(game.run('CAMP_MOTION.foundation.length'),7);
- assert.equal(game.run('CAMP_MOTION.plants.length'),14);
+ assert.equal(game.run('Boolean(FOREST.cache)'),true);
+ assert.equal(game.run('forestWalkable(forestLocal(camper).x,forestLocal(camper).y)'),true);
  assert.equal(game.run('typeof refugeSprite'), 'function');
  game.run('mock.images.forEach(image=>image.onload?.());draw();');
 });
@@ -85,4 +85,20 @@ test('enemy melee needs contact; death uses real position; camp and pause reset 
   return {farMiss,contact,death,reset,pause};
  })()`);
  for(const [name,passed]of Object.entries(result))assert.equal(passed,true,name);
+});
+
+
+test('forest routes cross the river only at the bridge and avoid all solid footprints',()=>{
+ const game=boot();
+ const result=game.run(`(()=>{const s=forestLayout(),from=forestLocal(camper),to={x:s.forge.x,y:s.forge.y+65},route=forestRoute(from,to);return {length:route.length,solid:route.every(p=>forestWalkable(p.x,p.y)),bridge:route.some(p=>Math.abs(p.x-forestRiverX(p.y))<53&&Math.abs(p.y-s.bridge.y)<=29),hole:forestWalkable(s.portal.x,s.portal.y),river:forestWalkable(forestRiverX(s.bridge.y+150),s.bridge.y+150)};})()`);
+ assert.ok(result.length>10);assert.ok(result.solid);assert.ok(result.bridge);assert.equal(result.hole,false);assert.equal(result.river,false);
+});
+test('forest building click walks to entrance before opening; returning from combat clears path',()=>{
+ const game=boot();game.run("activateCampObject('workshop')");assert.equal(game.run('panel'),null);assert.ok(game.run('FOREST.route.length')>0);
+ game.run('for(let i=0;i<400;i++)update(.05)');assert.equal(game.run('panel'),'workshop');
+ game.run('closePanel();activateCampObject("pets");start(2);camp();');assert.equal(game.run('FOREST.route.length'),0);assert.equal(game.run('FOREST.intent'),null);
+});
+test('descent waits for the transition and then starts the selected floor',()=>{
+ const game=boot();game.run('showFloors();$("enter-floor").onclick();');assert.equal(game.run('state'),'camp');
+ game.run('update(.5)');assert.equal(game.run('state'),'camp');game.run('update(.7)');assert.equal(game.run('state'),'run');assert.equal(game.run('t'),0);
 });
