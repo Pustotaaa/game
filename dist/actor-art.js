@@ -9,6 +9,7 @@ if(typeof Image!=='undefined'){
  const sheet=new Image();sheet.onload=()=>{ACTOR_ART.image=sheet;ACTOR_ART.ready=true;ACTOR_ART.cache.clear();if(typeof refreshActorArt==='function')refreshActorArt();};sheet.src='assets/actors.png';
 }
 function actorDirection(view){
+ if(view&&typeof view==='object')return view;
  if(view==='portrait')return {back:false,flip:false,moving:false};
  if(state==='run')return {back:true,flip:path(p+60)<path(p),moving:true};
  const dx=camper.tx-camper.x,dy=camper.ty-camper.y;
@@ -27,6 +28,6 @@ function drawActorSprite(kind,x,y,scale=1,view='auto'){
   brush.drawImage(ACTOR_ART.image,...bounds,Math.round((width-w)/2),height-h,w,h);ACTOR_ART.cache.set(key,sprite);
  }
  ctx.save();ctx.translate(Math.round(x),Math.round(y));ctx.scale(direction.flip?-scale:scale,scale);ctx.imageSmoothingEnabled=false;
- if(view!=='portrait')ellipse('#100c163d',0,feet-1,width*.28,Math.max(3,width*.09));
+ if(view!=='portrait'&&!direction.hideShadow)ellipse('#100c163d',0,feet-1,width*.28,Math.max(3,width*.09));
  ctx.drawImage(sprite,-width/2,feet-height,width,height);ctx.restore();return true;
 }

@@ -63,7 +63,7 @@ function hurtPet(entry,amount) {
   const temporary=Math.min(entry.rallyShield||0,amount);entry.rallyShield=Math.max(0,(entry.rallyShield||0)-temporary);amount-=temporary;
   const absorbed=Math.min(entry.shield||0,amount);entry.shield=Math.max(0,(entry.shield||0)-absorbed);amount-=absorbed;
   entry.hp=Math.max(0,entry.hp-amount);petVitals.set(entry.member.id,entry.hp);
-  if(entry.hp===0){entry.fallenAt=p+65+combatPets.indexOf(entry)*19;effects.push({p:entry.fallenAt,off:0,life:.6,max:.6,r:44,skill:true,color:'#d1c8e4'});}
+  if(entry.hp===0){entry.fallenAt=entry.motion?.p??p+65+combatPets.indexOf(entry)*19;entry.fallenOff=entry.motion?entry.motion.x-path(entry.fallenAt):0;effects.push({p:entry.fallenAt,off:entry.fallenOff,life:.6,max:.6,r:44,skill:true,color:'#d1c8e4'});}
 }
 function damageSquad(amount,area=false) {
   if(amount<=0)return;

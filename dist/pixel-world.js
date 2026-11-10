@@ -29,7 +29,7 @@ const PIXEL_WORLD={getSprite:()=>null,ready:false};
   const [w,h,feet]=sizes[kind],clock=state==='run'?t:anim;
   const bob=view==='portrait'?0:kind==='bat'?Math.round(Math.sin(clock*8)*3):dir.moving?Math.round(Math.sin(clock*12)*2):0;
   ctx.save();ctx.translate(Math.round(x),Math.round(y));ctx.scale(dir.flip?-scale:scale,scale);
-  if(view!=='portrait')rect('#17102466',-Math.round(w*.28),feet-1,Math.round(w*.56),4);
+  if(view!=='portrait'&&!dir.hideShadow)rect('#17102466',-Math.round(w*.28),feet-1,Math.round(w*.56),4);
   paint(name,-w/2,feet-h+bob,w,h);ctx.restore();return true;
  };
  const oldObject=drawObjectSprite;
@@ -41,11 +41,7 @@ const PIXEL_WORLD={getSprite:()=>null,ready:false};
  campFloor=function(){
   const points=campOutline(),f=campFrame(),s=campPoints();
   drawCampFoundation();
-  poly('#705782',points);line('#b393bf',4,[...points,points[0]]);
-  ctx.save();ctx.beginPath();points.forEach(([x,y],i)=>i?ctx.lineTo(x,y):ctx.moveTo(x,y));ctx.closePath();ctx.clip();
-  for(let row=0;row<H/36;row++)for(let col=0;col<W/48;col++){
-   const n=hash(col,row);if(n<.16){const x=col*48+(row%2)*20,y=row*36;rect('#5f486f',x,y,24,10);rect('#8c719b',x,y,24,3);}
-  }ctx.restore();
+  drawAbyssGrass(points);line('#6a8296',3,[...points,points[0]]);
   if(typeof drawCampGroundDetails==='function')drawCampGroundDetails(s,f);
   for(const side of [-1,1]){
    arch(f.x+side*f.w*.38,f.top+f.h*.36,.8);

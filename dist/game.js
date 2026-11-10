@@ -103,6 +103,7 @@ function dismissPanel() {
 function camp() {
   closePanel(); state = 'camp'; floor = 1; paused = false;
   t = 0; p = 0; abyss = -500; boss = null; combatPets = []; petVitals.clear(); resetFirelands();
+  if(typeof resetPetCombat==='function')resetPetCombat();
   enemies = []; gems = []; effects = []; texts = []; flash = 0;
   selectedFloor = Math.min(MAX_FLOOR, save.unlocked); resetCamper(); syncHUD();
 }
@@ -136,6 +137,7 @@ function start(n) {
   closePanel(); floor = n; state = 'run'; paused = false;
   t = 0; p = 0; abyss = -600; flash = 0; runStartCoins = save.coins;
   combatPets = squadMembers().map(createCombatPet); rallyCooldown=0; resetFirelands();
+  resetPetCombat();
   buildSkillButtons();
   effects = []; texts = []; gems = []; enemies = []; boss = null;
   const rules = FLOOR_RULES[n];
@@ -215,15 +217,10 @@ function update(dt) {
   const threatening = close.filter(e => !e.frozen);
   if (p < 1830) p = Math.min(1830, p + dt * (threatening.length ? 24 : 97.5) * (1+.05*skillRank('speed')));
   if (p >= 1830 && !boss) spawnBoss();
-  for (const entry of combatPets) {
-    if(entry.hp <= 0)continue;
-    const target = close.filter(e => e.hp > 0).sort((a,b) => a.p-b.p)[0];
-    if (entry.attack <= 0 && target) { const before=target.hp; hit(target, petDamage(entry.member)); healPet(entry,Math.max(0,before-Math.max(0,target.hp))*(.01*skillRank('lifesteal')+itemBonus(entry.member).heal));petOnAttack(entry,target); entry.attack = petAttackInterval(entry.member); }
-  }
+  updatePetCombat(dt);
   updateBoss(dt);
   if(floor>=6)updateFirelands(dt);
-  const incoming = Math.min(16, threatening.filter(e=>e.hp>0).reduce((sum,e)=>sum+(e.dps||1.25)*(e===boss&&boss.enraged?1.2:1),0));
-  if (incoming > 0) { damageSquad(dt * incoming); if (Math.sin(t * 9) > .8) flash = .1; }
+  damagePetContacts(dt);
   const rules=FLOOR_RULES[floor];
   if (t > rules.abyssDelay + skillRank('abyss')) abyss += dt * rules.abyssSpeed;
   if (owns('magnet')) {
@@ -504,11 +501,7 @@ function battleScene() {
     const y=sy(v);if(y< -50||y>H+60)continue;
     const x=path(v),width=v>1750?430:292;
     rect('#22192f',x-width/2-8,y+13,width+16,34);
-    for(let j=0;j<Math.ceil(width/42);j++){
-      const bx=x-width/2+j*42,n=hash(v,j);
-      rect(n>.5?'#50415f':'#42364f',bx,y,40,34);rect('#705878',bx,y,40,2);
-      if(n>.75){rect('#666042',bx+8,y+27,14,3);line('#2f243b',1,[[bx+20,y+4],[bx+16,y+15],[bx+22,y+20]]);}
-    }
+    drawAbyssGrass([[x-width/2,y],[x+width/2,y],[x+width/2,y+36],[x-width/2,y+36]],(p*.75)%144);
     rect('#89718f',x-width/2-9,y-2,10,31);rect('#77617e',x+width/2,y-2,10,31);
   }
   let ay=sy(1930),ax=path(1930);
@@ -526,8 +519,10 @@ function drawBattleActors(){
   if(boss?.hp>0 && boss.windup>0){const intensity=1-boss.windup/(floor>=6?1.6:1.2);ellipse(floor>=6?'#e65a1425':'#bb284025',path(p),sy(p),145,88);ctx.strokeStyle=floor>=6?'#ffbc55':'#ff8ca8';ctx.lineWidth=3+intensity*3;ctx.beginPath();ctx.ellipse(path(p),sy(p),145*(1-intensity*.55),88*(1-intensity*.55),0,0,Math.PI*2);ctx.stroke();}
   if(boss?.hp>0 && boss.enraged)glow(path(boss.p),sy(boss.p),110,floor>=6?'#ff812028':'#f2406328');
   const entities=enemies.filter(e=>e.hp>0).map(e=>({p:e.p,kind:'enemy',e}));entities.push({p,kind:'hero'});
-  combatPets.forEach((entry,i) => entities.push({p:entry.hp>0?p+65+i*19:entry.fallenAt,kind:entry.hp>0?'pet':'fallen',entry,member:entry.member,off:(i-(combatPets.length-1)/2)*43}));entities.sort((a,b)=>b.p-a.p);
-  for(let e of entities){const y=sy(e.p);if(y< -150||y>H+150)continue;if(e.kind==='hero')hero(path(p),y+Math.sin(t*12)*1.5);else if(e.kind==='pet'){const px=path(e.p)+e.off;drawPet(e.member,px,y+Math.sin(t*16)*2,1.15);if(e.entry.burning?.remaining>0)flame(px,y+15,.35);if(e.entry.shield>0||e.entry.rallyShield>0){ctx.strokeStyle='#d7b575';ctx.lineWidth=1.5;ctx.beginPath();ctx.ellipse(px,y,24,29,0,0,Math.PI*2);ctx.stroke();}}else if(e.kind==='fallen'){const px=path(e.p)+e.off;ellipse('#201327',px,y+9,21,9);rect('#86718f',px-8,y-5,16,14);rect('#c2a3cb',px-2,y-3,4,13);rect('#c2a3cb',px-5,y,10,3);}else { enemy(e.e,path(e.p)+e.e.off,y); if(e.e.frozen) { glow(path(e.p)+e.e.off,y,40,'#75d3ff33');line('#b1e9ff',2,[[path(e.p)+e.e.off-15,y+15],[path(e.p)+e.e.off+15,y+15]]); } }}
+  combatPets.forEach((entry,index) => {const m=petMotion(entry,index);entities.push({p:entry.hp>0?m.p:entry.fallenAt,kind:entry.hp>0?'pet':'fallen',entry,index,member:entry.member,off:entry.fallenOff??(m.x-path(m.p))});});entities.sort((a,b)=>b.p-a.p);
+  drawPetRange();
+  for(let e of entities){const y=sy(e.p);if(y< -150||y>H+150)continue;if(e.kind==='hero')hero(path(p),y+Math.sin(t*12)*1.5);else if(e.kind==='pet'){drawMovingPet(e.entry,e.index);}else if(e.kind==='fallen'){const px=path(e.p)+e.off;ellipse('#201327',px,y+9,21,9);rect('#86718f',px-8,y-5,16,14);rect('#c2a3cb',px-2,y-3,4,13);rect('#c2a3cb',px-5,y,10,3);}else { enemy(e.e,path(e.p)+e.e.off,y); if(e.e.frozen) { glow(path(e.p)+e.e.off,y,40,'#75d3ff33');line('#b1e9ff',2,[[path(e.p)+e.e.off-15,y+15],[path(e.p)+e.e.off+15,y+15]]); } }}
+  drawPetProjectiles();
   for(let gem of gems)if(!gem.collected){const y=sy(gem.p);if(y>0&&y<H)crystal(path(gem.p)+gem.off,y+Math.sin(anim*3+gem.p)*3,.7);}
   for(let e of effects){const x=path(e.p)+e.off,y=sy(e.p);ctx.strokeStyle=e.skill?(e.color||'#de9dff'):'#ffbd86';ctx.globalAlpha=e.life/e.max;ctx.lineWidth=e.skill?6:3;ctx.beginPath();ctx.ellipse(x,y,e.r*(1-e.life/e.max*.6),e.r*(1-e.life/e.max*.6)*.65,-.4,0,Math.PI*1.65);ctx.stroke();if(e.skill)glow(x,y,200,'#bc69e31c');ctx.globalAlpha=1;}
   for(let q of texts){ctx.fillStyle='#e6c6ff';ctx.font='bold 17px Georgia';ctx.fillText('+'+q.value,path(q.p)+q.off,sy(q.p));}
