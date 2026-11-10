@@ -553,7 +553,14 @@ function frame(now) {
   const dt=last===null?0:Math.min(.05,Math.max(0,(now-last)/1000));last=now;
   update(dt);draw();syncHUD();requestAnimationFrame(frame);
 }
-requestAnimationFrame(frame);
+// Later scripts extend the camp renderer. The first frame must wait for them.
+let gameLoopStarted=false;
+function startGameLoop(){
+  if(gameLoopStarted)return;
+  gameLoopStarted=true;requestAnimationFrame(frame);
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',startGameLoop,{once:true});
+else startGameLoop();
 function drawPet(member, x, y, scale = 1, view = 'auto') {
   const rarity = RARITIES[member.rarity];
   if (member.rarity !== 'common') glow(x, y, 35 * scale, rarity.color + '20');
