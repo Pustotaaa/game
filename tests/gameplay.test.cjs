@@ -11,7 +11,7 @@ function boot(){
  vm.runInContext(mockSource,context);
  const html=readFileSync(join(root,'index.html'),'utf8');
  for(const match of html.matchAll(/\bid="([^"]+)"/g))vm.runInContext('mock.elements.set('+JSON.stringify(match[1])+',element('+JSON.stringify(match[1])+'));',context);
- for(const name of ["progression.js","balance.js","camp.js","firelands.js","systems.js","workshop.js","object-art.js","terrain-art.js","actor-art.js","game.js","pixel-world.js","camp-life.js","camp-motion.js","pet-combat.js","abyss-nature.js"]){
+ for(const name of ["progression.js","balance.js","camp.js","firelands.js","systems.js","workshop.js","object-art.js","terrain-art.js","actor-art.js","game.js","pixel-world.js","camp-life.js","camp-motion.js","pet-combat.js","abyss-nature.js","world-unified.js"]){
   new vm.Script(readFileSync(join(root,name),'utf8'),{filename:name}).runInContext(context);
   assert.equal(vm.runInContext('mock.raf.length',context),0,'Animation started before all scripts loaded: '+name);
  }
@@ -27,8 +27,15 @@ test('startup waits for all scripts; camp and late image callbacks render',()=>{
  assert.equal(game.run('mock.raf.length'),1);
  assert.equal(game.run('CAMP_MOTION.foundation.length'),7);
  assert.equal(game.run('CAMP_MOTION.plants.length'),14);
- assert.equal(game.run('ANCIENT_TREE.width'),144);
+ assert.equal(game.run('typeof refugeSprite'), 'function');
  game.run('mock.images.forEach(image=>image.onload?.());draw();');
+});
+test('missing refuge atlases preserve camp controls and combat fallback',()=>{
+ const game=boot();
+ game.run('mock.images.slice(-4).forEach(image=>image.onerror?.());draw();showFloors();');
+ assert.equal(game.run('panel'),'floors');
+ game.run('closePanel();start(2);update(.05);draw();');
+ assert.equal(game.run('state'),'run');
 });
 for(const species of ['cat','wolf'])test(species+' approaches on a curve and strikes once during its jump',()=>{
  const game=boot();
